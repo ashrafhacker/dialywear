@@ -93,7 +93,6 @@ src/
 
 ## Configuration
 
-- **WhatsApp Number** — All orders route to `+91 7353364410`
 - **Theme Persistence** — Stored in localStorage key `dialywear_theme`
 - **Cart Persistence** — Stored in localStorage key `dialywear_cart`
 - **Feedback Storage** — Stored in localStorage key `dialywear_feedback`
