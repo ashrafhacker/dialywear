@@ -20,7 +20,6 @@ export default function Shop({ search }) {
     const category = params.get("category");
 
     if (category) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilters((prev) => ({
         ...prev,
         category: [category],

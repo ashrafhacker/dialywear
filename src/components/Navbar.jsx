@@ -1,41 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useTheme } from "../context/ThemeContext";
-import "../styles/navbar.css";
 
-interface NavbarProps {
-  search: string;
-  setSearch: (value: string) => void;
-  onCartClick: () => void;
-  isOnline?: boolean;
-}
-
-export default function Navbar({ search, setSearch, onCartClick, isOnline }: NavbarProps) {
+export default function Navbar({ search, setSearch, onCartClick }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { cartCount } = useCart();
   const { theme, toggleTheme } = useTheme();
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   const handleClose = () => setMenuOpen(false);
-
-  // Handle PWA install prompt
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setShowInstallPrompt(true);
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
-    };
-  }, []);
-
-  const handleInstallClick = () => {
-    setShowInstallPrompt(false);
-  };
 
   return (
     <nav className="navbar">
@@ -43,9 +16,9 @@ export default function Navbar({ search, setSearch, onCartClick, isOnline }: Nav
 
       <div className="navbar-container">
         <div className="nav-left">
-        <Link to="/" className="nav-logo">
-          <img src="/logo.png" alt="DialyWear Logo" className="nav-logo-img" />
-        </Link>
+          <Link to="/" className="nav-logo">
+            <img src="/logo.png" alt="DialyWear" className="nav-logo-img" />
+          </Link>
         </div>
 
         <div className="nav-center">
@@ -97,43 +70,6 @@ export default function Navbar({ search, setSearch, onCartClick, isOnline }: Nav
           </div>
         </div>
       </div>
-
-      {showInstallPrompt && (
-        <div className="install-prompt" style={{
-          position: 'fixed',
-          top: '60px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'linear-gradient(135deg, #FFD54F, #f5a623)',
-          color: '#000',
-          padding: '12px 24px',
-          borderRadius: '8px',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-          margin: '0 auto',
-          width: 'fit-content',
-          maxWidth: '90%'
-        }}>
-          <span style={{ fontWeight: '600' }}>Install DialyWear for better mobile experience</span>
-          <button 
-            onClick={handleInstallClick}
-            style={{
-              background: '#000',
-              color: '#fff',
-              border: 'none',
-              padding: '6px 12px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: '600'
-            }}
-          >
-            Install
-          </button>
-        </div>
-      )}
     </nav>
   );
 }

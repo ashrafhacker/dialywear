@@ -1,17 +1,11 @@
-/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState, useEffect } from "react";
 
-interface ThemeContextValue {
-  theme: "light" | "dark";
-  toggleTheme: () => void;
-}
+const ThemeContext = createContext();
 
-const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
-
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<ThemeContextValue["theme"]>(() => {
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("dialywear_theme");
-    if (saved) return saved as "light" | "dark";
+    if (saved) return saved;
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
 
@@ -22,22 +16,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   const toggleTheme = () => setTheme((t) => (t === "light" ? "dark" : "light"));
 
-  const value: ThemeContextValue = {
-    theme,
-    toggleTheme,
-  };
-
   return (
-    <ThemeContext.Provider value={value}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-export function useTheme(): ThemeContextValue {
+export function useTheme() {
   const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error("useTheme must be used within ThemeProvider");
-  }
+  if (!context) throw new Error("useTheme must be used within ThemeProvider");
   return context;
 }
