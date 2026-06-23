@@ -1,5 +1,8 @@
 ﻿<div align="center">
-  <img src="public/logo.png" alt="DialyWear" width="400" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ashrafhacker/dialywear/main/public/logo.png" />
+    <img src="https://raw.githubusercontent.com/ashrafhacker/dialywear/main/public/logo.png" alt="DialyWear" width="420" />
+  </picture>
   <br /><br />
   <h1>DialyWear</h1>
   <p><strong>Enterprise-Grade E-Commerce Frontend</strong><br />Zero-Backend &middot; React 18 &middot; Vite 6</p>
