@@ -78,7 +78,7 @@ export default function About() {
       {/* 8. CTA */}
       <section className="about-cta">
         <h2>Discover Your Style</h2>
-        <button onClick={() => window.location.href = "/#products"}>
+        <button onClick={() => window.location.href = "/dialywear/#products"}>
           Shop Now
         </button>
       </section>

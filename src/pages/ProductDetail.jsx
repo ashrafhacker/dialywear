@@ -251,7 +251,7 @@ export default function ProductDetail() {
               <ProductCard
                 key={p.id}
                 product={p}
-                onView={() => window.location.href = `/product/${p.id}`}
+                onView={() => window.location.href = `/dialywear/product/${p.id}`}
               />
             ))}
           </div>
