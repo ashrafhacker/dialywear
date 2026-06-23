@@ -22,7 +22,7 @@ function App() {
   const [cartOpen, setCartOpen] = useState(false);
 
   return (
-    <BrowserRouter basename="/dialywear">
+    <BrowserRouter>
       <Navbar search={search} setSearch={setSearch} onCartClick={() => setCartOpen(true)} />
       <Routes>
         <Route path="/" element={
