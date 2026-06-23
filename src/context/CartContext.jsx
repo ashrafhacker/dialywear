@@ -1,10 +1,49 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
 
-const CartContext = createContext();
-
 const STORAGE_KEY = "dialywear_cart";
 
-function loadCart() {
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  images: string[];
+  category: string;
+  description: string;
+  sizes: string[];
+  colors: string[];
+  inStock: boolean;
+  rating: number;
+  reviews: number;
+  badge?: "sale" | "new" | "hot";
+  discountPrice?: number;
+}
+
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  size: string;
+  qty: number;
+}
+
+interface CartState {
+  cart: CartItem[];
+}
+
+interface CartContextValue {
+  cart: CartItem[];
+  addToCart: (product: Product, size: string) => void;
+  removeFromCart: (id: string, size: string) => void;
+  updateQty: (id: string, size: string, qty: number) => void;
+  clearCart: () => void;
+  cartCount: number;
+  cartTotal: number;
+}
+
+const CartContext = createContext<CartContextValue | undefined>(undefined);
+
+function loadCart(): CartItem[] {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
@@ -13,64 +52,72 @@ function loadCart() {
   }
 }
 
-function cartReducer(state, action) {
+function cartReducer(state: CartState, action: any): CartState {
   switch (action.type) {
     case "ADD_ITEM": {
-      const existing = state.find(
+      const existing = state.cart.find(
         (item) => item.id === action.product.id && item.size === action.size
       );
       if (existing) {
-        return state.map((item) =>
-          item.id === action.product.id && item.size === action.size
-            ? { ...item, qty: item.qty + 1 }
-            : item
-        );
+        return {
+          cart: state.cart.map((item) =>
+            item.id === action.product.id && item.size === action.size
+              ? { ...item, qty: item.qty + 1 }
+              : item
+          )
+        };
       }
-      return [
-        ...state,
-        {
-          id: action.product.id,
-          name: action.product.name,
-          price: action.product.price,
-          image: action.product.images[0],
-          size: action.size,
-          qty: 1,
-        },
-      ];
+      return {
+        cart: [
+          ...state.cart,
+          {
+            id: action.product.id,
+            name: action.product.name,
+            price: action.product.price,
+            image: action.product.images[0],
+            size: action.size,
+            qty: 1,
+          },
+        ]
+      };
     }
     case "REMOVE_ITEM":
-      return state.filter(
-        (item) => !(item.id === action.id && item.size === action.size)
-      );
+      return {
+        cart: state.cart.filter(
+          (item) => !(item.id === action.id && item.size === action.size)
+        )
+      };
     case "UPDATE_QTY":
-      return state.map((item) =>
-        item.id === action.id && item.size === action.size
-          ? { ...item, qty: Math.max(1, action.qty) }
-          : item
-      );
+      return {
+        cart: state.cart.map((item) =>
+          item.id === action.id && item.size === action.size
+            ? { ...item, qty: Math.max(1, action.qty) }
+            : item
+        )
+      };
     case "CLEAR":
-      return [];
+      return { cart: [] };
     default:
       return state;
   }
 }
 
-export function CartProvider({ children }) {
-  const [cart, dispatch] = useReducer(cartReducer, [], loadCart);
+export function CartProvider({ children }: { children: React.ReactNode }) {
+  const [cartState, dispatch] = useReducer(cartReducer, { cart: [] }, loadCart);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
-  }, [cart]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cartState.cart));
+  }, [cartState.cart]);
 
-  const addToCart = (product, size) => {
+  const addToCart = (product: Product, size: string) => {
     dispatch({ type: "ADD_ITEM", product, size });
   };
 
-  const removeFromCart = (id, size) => {
+  const removeFromCart = (id: string, size: string) => {
     dispatch({ type: "REMOVE_ITEM", id, size });
   };
 
-  const updateQty = (id, size, qty) => {
+  const updateQty = (id: string, size: string, qty: number) => {
     dispatch({ type: "UPDATE_QTY", id, size, qty });
   };
 
@@ -78,20 +125,27 @@ export function CartProvider({ children }) {
     dispatch({ type: "CLEAR" });
   };
 
-  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
-  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const cartCount = cartState.cart.reduce((sum, item) => sum + item.qty, 0);
+  const cartTotal = cartState.cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+  const value: CartContextValue = {
+    cart: cartState.cart,
+    addToCart,
+    removeFromCart,
+    updateQty,
+    clearCart,
+    cartCount,
+    cartTotal,
+  };
 
   return (
-    <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, updateQty, clearCart, cartCount, cartTotal }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function useCart() {
+export function useCart(): CartContextValue {
   const context = useContext(CartContext);
   if (!context) throw new Error("useCart must be used within CartProvider");
   return context;

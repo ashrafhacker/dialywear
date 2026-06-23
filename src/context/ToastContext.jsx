@@ -1,14 +1,24 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import "../styles/toast.css";
 
-const ToastContext = createContext();
+interface Toast {
+  id: number;
+  message: string;
+  type: "success" | "error" | "info";
+}
+
+interface ToastContextValue {
+  addToast: (message: string, type?: "success" | "error" | "info") => void;
+}
+
+const ToastContext = createContext<ToastContextValue | undefined>(undefined);
 
 let toastId = 0;
 
-export function ToastProvider({ children }) {
-  const [toasts, setToasts] = useState([]);
+export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
-  const addToast = useCallback((message, type = "info") => {
+  const addToast = useCallback((message: string, type: "success" | "error" | "info" = "info") => {
     const id = ++toastId;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
@@ -23,7 +33,7 @@ export function ToastProvider({ children }) {
   };
 
   return (
-    <ToastContext.Provider value={addToast}>
+    <ToastContext.Provider value={{ addToast }}>
       {children}
       <div className="toast-container">
         {toasts.map((t) => (
@@ -37,7 +47,10 @@ export function ToastProvider({ children }) {
   );
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function useToast() {
-  return useContext(ToastContext);
+export function useToast(): ToastContextValue {
+  const context = useContext(ToastContext);
+  if (!context) {
+    throw new Error("useToast must be used within ToastProvider");
+  }
+  return context;
 }
