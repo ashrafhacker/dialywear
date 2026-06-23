@@ -43,9 +43,9 @@ export default function Navbar({ search, setSearch, onCartClick, isOnline }: Nav
 
       <div className="navbar-container">
         <div className="nav-left">
-          <Link to="/" className="nav-logo">
-            <img src="https://raw.githubusercontent.com/ashrafhacker/dialywear/main/public/logo.png" alt="DialyWear" className="nav-logo-img" />
-          </Link>
+        <Link to="/" className="nav-logo">
+          <img src="/logo.png" alt="DialyWear Logo" className="nav-logo-img" />
+        </Link>
         </div>
 
         <div className="nav-center">
