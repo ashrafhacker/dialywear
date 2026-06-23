@@ -1,6 +1,5 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
-
-const CartContext = createContext();
+import { useReducer, useEffect } from "react";
+import { CartContext } from "./cart";
 
 const STORAGE_KEY = "dialywear_cart";
 
@@ -90,8 +89,4 @@ export function CartProvider({ children }) {
   );
 }
 
-export function useCart() {
-  const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within CartProvider");
-  return context;
-}
+

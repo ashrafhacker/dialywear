@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../hooks/useToast";
 import "../styles/footer.css";
 
 export default function Footer() {

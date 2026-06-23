@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { useTheme } from "../context/ThemeContext";
+import { useCart } from "../hooks/useCart";
+import { useTheme } from "../hooks/useTheme";
 
 export default function Navbar({ search, setSearch, onCartClick }) {
   const [menuOpen, setMenuOpen] = useState(false);

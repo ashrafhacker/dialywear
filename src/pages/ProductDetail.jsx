@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { products } from "../data/product";
-import { useCart } from "../context/CartContext";
-import { useToast } from "../context/ToastContext";
+import { useCart } from "../hooks/useCart";
+import { useToast } from "../hooks/useToast";
 import ProductCard from "../components/ProductCard";
 import "../styles/product-detail.css";
 

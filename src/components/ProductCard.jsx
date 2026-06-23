@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useCart } from "../context/CartContext";
-import { useToast } from "../context/ToastContext";
+import { useCart } from "../hooks/useCart";
+import { useToast } from "../hooks/useToast";
 
 export default function ProductCard({ product, onView }) {
   const [selectedSize, setSelectedSize] = useState(null);

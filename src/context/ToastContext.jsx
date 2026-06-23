@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
+import { ToastContext } from "./toast";
 import "../styles/toast.css";
-
-const ToastContext = createContext();
 
 let toastId = 0;
 
@@ -37,8 +36,4 @@ export function ToastProvider({ children }) {
   );
 }
 
-export function useToast() {
-  const context = useContext(ToastContext);
-  if (!context) throw new Error("useToast must be used within ToastProvider");
-  return context;
-}
+

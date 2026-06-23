@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { products } from "../data/product";
-import { useToast } from "../context/ToastContext";
+import { useToast } from "../hooks/useToast";
 import { getFeedback, saveFeedback } from "../data/feedbackData";
 import "../styles/feedback.css";
 

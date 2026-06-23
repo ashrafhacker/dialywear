@@ -1,4 +1,4 @@
-import { useCart } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 import "../styles/cart.css";
 
 export default function CartDrawer({ open, onClose }) {
