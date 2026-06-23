@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useToast } from "../context/ToastContext";
 
 export default function ContactForm() {
   const [form, setForm] = useState({
@@ -7,42 +8,55 @@ export default function ContactForm() {
     subject: "",
     message: "",
   });
+  const [sending, setSending] = useState(false);
+  const addToast = useToast();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.name || !form.email || !form.message) {
-      alert("Please fill all required fields");
+      addToast("Please fill all required fields", "error");
       return;
     }
 
-    alert("Message sent successfully!");
-    setForm({ name: "", email: "", subject: "", message: "" });
+    setSending(true);
+
+    try {
+      const message = `*New Enquiry from DialyWear*\n\nName: ${form.name}\nEmail: ${form.email}\nSubject: ${form.subject || "N/A"}\nMessage: ${form.message}`;
+      const url = `https://wa.me/917353364410?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+
+      addToast("Message sent successfully!", "success");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch {
+      addToast("Failed to send message. Try again.", "error");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <form className="contact-form" onSubmit={handleSubmit}>
-
       <input
         type="text"
         name="name"
-        placeholder="Your Name"
+        placeholder="Your Name *"
         value={form.name}
         onChange={handleChange}
+        required
       />
-
       <input
         type="email"
         name="email"
-        placeholder="Your Email"
+        placeholder="Your Email *"
         value={form.email}
         onChange={handleChange}
+        required
       />
-
       <input
         type="text"
         name="subject"
@@ -50,26 +64,26 @@ export default function ContactForm() {
         value={form.subject}
         onChange={handleChange}
       />
-
       <textarea
         name="message"
-        placeholder="Your Message"
+        placeholder="Your Message *"
         rows="5"
         value={form.message}
         onChange={handleChange}
+        required
       />
+      <button type="submit" disabled={sending}>
+        {sending ? "Sending..." : "Send Message"}
+      </button>
 
-      <button type="submit">Send Message</button>
-
-      {/* WHATSAPP BUTTON */}
       <a
         href="https://wa.me/917353364410?text=Hello%20I%20am%20interested%20in%20your%20products"
         target="_blank"
+        rel="noopener noreferrer"
         className="whatsapp-btn"
       >
         Chat on WhatsApp
       </a>
-
     </form>
   );
 }

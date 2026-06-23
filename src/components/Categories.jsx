@@ -70,7 +70,8 @@ export default function FeaturedCategories() {
   return (
     <section className="featured-categories">
       <div className="fc-header">
-        <h2>Explore Collections</h2>
+        <span className="section-label">Categories</span>
+        <h2>Explore <span className="brand-text">Collections</span></h2>
       </div>
 
       {/* Scroll Buttons */}

@@ -1,116 +1,146 @@
-/* PAGE */
 .contact-page {
-  background: #fff;
-  color: #111;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 24px;
 }
 
-/* HEADER */
 .contact-header {
   text-align: center;
-  padding: 80px 20px 40px;
+  margin-bottom: 48px;
 }
 
 .contact-header h1 {
   font-size: 32px;
-  font-weight: 500;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
 }
 
 .contact-header p {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #666;
+  font-size: 15px;
+  color: var(--text-secondary);
 }
 
-/* LAYOUT */
 .contact-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  padding: 60px 80px;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 60px;
+  align-items: start;
 }
 
-/* INFO */
 .contact-info h2 {
-  margin-bottom: 20px;
   font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 16px;
   font-size: 14px;
+  color: var(--text-secondary);
 }
 
-/* FORM */
+.info-item span {
+  width: 36px;
+  height: 36px;
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
 .contact-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 14px;
 }
 
 .contact-form input,
 .contact-form textarea {
-  padding: 12px;
-  border: 1px solid #ddd;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   font-size: 14px;
   outline: none;
-  transition: 0.3s;
+  background: var(--bg-primary);
+  transition: var(--transition);
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
-  border-color: #000;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.04);
 }
 
-/* BUTTON */
 .contact-form button {
   padding: 12px;
   border: none;
-  background: #000;
+  background: var(--accent);
   color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: 0.3s;
+  transition: var(--transition);
 }
 
 .contact-form button:hover {
-  opacity: 0.8;
+  background: var(--accent-hover);
 }
 
-/* WHATSAPP */
+.contact-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .whatsapp-btn {
   text-align: center;
   padding: 12px;
-  border: 1px solid #000;
+  border: 1px solid var(--whatsapp);
+  color: var(--whatsapp);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
   text-decoration: none;
-  color: #000;
-  transition: 0.3s;
+  transition: var(--transition);
 }
 
 .whatsapp-btn:hover {
-  background: #000;
+  background: var(--whatsapp);
   color: #fff;
 }
 
-/* FLOAT BUTTON */
 .whatsapp-float {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #25D366;
+  bottom: 24px;
+  right: 24px;
+  background: var(--whatsapp);
   color: #fff;
-  font-size: 20px;
-  padding: 12px 15px;
+  font-size: 22px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
+  box-shadow: var(--shadow-lg);
+  transition: var(--transition);
+  z-index: 100;
 }
 
-/* RESPONSIVE */
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  background: var(--whatsapp-hover);
+}
+
 @media (max-width: 768px) {
-  .contact-container {
-    grid-template-columns: 1fr;
-    padding: 40px 20px;
-    gap: 40px;
-  }
+  .contact-page { padding: 40px 16px; }
+  .contact-container { grid-template-columns: 1fr; gap: 32px; }
+  .contact-header h1 { font-size: 28px; }
 }

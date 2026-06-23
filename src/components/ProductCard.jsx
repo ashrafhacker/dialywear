@@ -1,45 +1,59 @@
 import { useState } from "react";
+import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastContext";
 
-export default function ProductCard({ product , onView }) {
+export default function ProductCard({ product, onView }) {
   const [selectedSize, setSelectedSize] = useState(null);
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const { addToCart } = useCart();
+  const addToast = useToast();
+
+  const discount = product.originalPrice
+    ? Math.round((1 - product.price / product.originalPrice) * 100)
+    : 0;
 
   const handleOrder = () => {
     if (!selectedSize) {
-      alert("Please select a size");
+      addToast("Please select a size", "error");
       return;
     }
-
-    const message = `Hi, I want to order:
-
-Product ID: ${product.id}
-Name: ${product.name}
-Category: ${product.category}
-Fabric: ${product.fabric}
-Size: ${selectedSize}
-Price: ₹${product.price}`;
-
-    const phoneNumber = "917353364410"; // replace with your number
-
-    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-
+    const message = `Hi, I want to order:\n\nProduct ID: ${product.id}\nName: ${product.name}\nSize: ${selectedSize}\nPrice: ₹${product.price}`;
+    const url = `https://wa.me/917353364410?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedSize) {
+      addToast("Please select a size", "error");
+      return;
+    }
+    addToCart(product, selectedSize);
+    addToast(`${product.name} added to cart!`, "success");
   };
 
   return (
     <div className="product-card">
-      
-      {/* IMAGE */}
       <div className="product-image">
-        <img src={product.images[0]} alt={product.name} />
+        {!imgLoaded && <div className="skeleton product-skeleton" />}
+        <img
+          src={product.images[0]}
+          alt={product.name}
+          onLoad={() => setImgLoaded(true)}
+          style={{ opacity: imgLoaded ? 1 : 0 }}
+        />
+        <div className="product-quick-view" onClick={onView}>
+          <span>Quick View</span>
+        </div>
+        {product.badge && (
+          <span className={`badge badge-${product.badge}`}>
+            {product.badge === "sale" ? `${discount}% OFF` : product.badge === "new" ? "New" : "Hot"}
+          </span>
+        )}
       </div>
 
-      {/* INFO */}
       <div className="product-info">
         <h3>{product.name}</h3>
 
-        {/* SIZE SELECT */}
         <div className="sizes">
           {product.sizes.map((size) => (
             <button
@@ -52,19 +66,25 @@ Price: ₹${product.price}`;
           ))}
         </div>
 
-        {/* PRICE */}
-        <p className="price">₹{product.price}</p>
+        <div className="price-row">
+          <span className="price">₹{product.price}</span>
+          {product.originalPrice && (
+            <span className="original-price">₹{product.originalPrice}</span>
+          )}
+        </div>
 
-        {/* ACTIONS */}
         <div className="actions">
-          <button className="order-btn" onClick={handleOrder}>
-            Order
+          <button className="add-cart-btn" onClick={handleAddToCart}>
+            Add to Cart
           </button>
-
           <button className="view-btn" onClick={onView}>
             View
           </button>
         </div>
+
+        <button className="order-btn" onClick={handleOrder}>
+          Order on WhatsApp
+        </button>
       </div>
     </div>
   );
